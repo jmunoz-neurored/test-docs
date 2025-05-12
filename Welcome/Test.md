@@ -44,7 +44,7 @@ Prueba Suggest
 ==subrayado F==
 
 
-- [ ] Prueba tareas
+- [ ] Prueba tarea sin completar
 - [ ] \
 
 **Antiguo documento**. *¿Funcionará?* ~~¿O no funcionará?~~
