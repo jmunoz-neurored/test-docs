@@ -44,7 +44,7 @@ Prueba Suggest
 ==subrayado F==
 
 
-Otra prueba
+- [ ] Otra prueba
 
 **Antiguo documento**. *¿Funcionará?* ~~¿O no funcionará?~~
 
