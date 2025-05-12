@@ -47,7 +47,8 @@ Prueba Suggest
 - [ ] Prueba tarea sin completar
 - [x] Prueba tarea completa
 
-* O
+* Prueba viñetas
+* \
 
 **Antiguo documento**. *¿Funcionará?* ~~¿O no funcionará?~~
 
