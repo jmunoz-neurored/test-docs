@@ -36,16 +36,6 @@ Prueba Suggest
 
 __==subrayado A==__
 
-==subrayado B==
-
-==subrayado C==
-
-==subrayado D==
-
-==subrayado E==
-
-==subrayado F==
-
 
 - [ ] Prueba tarea sin completar
 - [x] Prueba tarea completa
