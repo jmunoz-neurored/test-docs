@@ -4,7 +4,7 @@
 
 [getouline](https://www.getoutline.com/)
 
-Más sobre Outline [\[test\](/test)]()
+Más sobre Outline 
 
 
 :::info
