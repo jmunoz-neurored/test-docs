@@ -10,7 +10,7 @@ Rates
 
 Enlace a Rates aqui
 
-Test
+[Test](https://doc/test-ofEILwlrDt)
 
 [What is Outline](https://outline.dev.neurored.com./What%20is%20Outline.md)
 
