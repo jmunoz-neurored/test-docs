@@ -6,7 +6,7 @@
 
 Más sobre Outline 
 
-Rates
+[Rates](https://outline.dev.neurored.com/doc/rates-yDs9EPgQ5A)
 
 Enlace a Rates aqui
 
