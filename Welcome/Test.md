@@ -10,7 +10,7 @@ Más sobre Outline
 
 [./What%20is%20Outline.md](./What%20is%20Outline.md)
 
-[aqui](./What%20is%20Outline.md)
+aqui
 
 
 enlace a rates [aqui](/doc/rate-sheets-g9Tb0aSm69)
