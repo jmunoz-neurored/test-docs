@@ -8,7 +8,7 @@ Más sobre Outline
 
 [Rates](https://outline.dev.neurored.com/doc/rates-yDs9EPgQ5A)
 
-Enlace a Rates aqui
+Enlace a Rates [aqui](https://outline.dev.neurored.com/doc/rates-yDs9EPgQ5A)
 
 [Test](/doc/test-ofEILwlrDt)
 
