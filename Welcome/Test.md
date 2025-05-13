@@ -4,7 +4,7 @@
 
 [getouline](https://www.getoutline.com/)
 
-Más sobre Outline a
+Más sobre Outline aqui
 
 
 :::info
