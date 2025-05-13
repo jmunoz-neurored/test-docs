@@ -6,7 +6,7 @@
 
 Más sobre Outline 
 
-/archive
+[/archive]()
 
 
 
