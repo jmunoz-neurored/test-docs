@@ -6,6 +6,8 @@
 
 Más sobre Outline ./What%20is%20Outline.md
 
+[search](/search)
+
 
 
 :::info
