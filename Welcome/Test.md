@@ -11,12 +11,10 @@ Más sobre Outline
 
 @[Rates](mention://c0578822-acb4-4137-8a8c-611a2011c33f/document/87961cfb-a462-420c-81a2-3068db905853) 
 
-@[Test](mention://b9c44bc7-e479-4b77-9320-3193d1e0b50a/document/788b578a-f2ae-48fd-896c-84423824d6f7) 
+@[Test](mention://b9c44bc7-e479-4b77-9320-3193d1e0b50a/document/788b578a-f2ae-48fd-896c-84423824d6f7)
 
-[\[\[]()test-ofEILwlrDt\]\]
 
-[test]() 
-
+ 
 
 
 :::info
