@@ -6,15 +6,10 @@
 
 Más sobre Outline 
 
-[Rates](https://outline.dev.neurored.com/doc/rates-yDs9EPgQ5A)
 
-Enlace a Rates [aqui](https://outline.dev.neurored.com/doc/rates-yDs9EPgQ5A)
+\
 
-[Test](/doc/test-ofEILwlrDt)
-
-[What is Outline](https://outline.dev.neurored.com./What%20is%20Outline.md)
-
-
+\
 
 :::info
 Prueba Info
