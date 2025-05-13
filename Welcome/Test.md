@@ -13,7 +13,7 @@ Más sobre Outline
 [aqui](./What%20is%20Outline.md)
 
 
-enlace a rates [aqui](https://outline.dev.neurored.com/doc/rate-sheets-g9Tb0aSm69)
+enlace a rates [aqui](/doc/rate-sheets-g9Tb0aSm69)
 
 
 
