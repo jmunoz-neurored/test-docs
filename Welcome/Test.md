@@ -4,14 +4,7 @@
 
 [getouline](https://www.getoutline.com/)
 
-Más sobre Outline [./What%20is%20Outline.md]()
-
-[search](/search)
-
-[what-is-outline]()
-
-[What is Outline]()
-
+Más sobre Outline 
 
 
 :::info
