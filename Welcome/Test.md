@@ -6,8 +6,11 @@
 
 Más sobre Outline 
 
+Rates
 
-\
+Enlace a Ra
+
+
 
 :::info
 Prueba Info
