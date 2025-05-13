@@ -13,6 +13,9 @@ Más sobre Outline
 [aqui](./What%20is%20Outline.md)
 
 
+enlace a rates aqui
+
+
 
 :::info
 Prueba Info
