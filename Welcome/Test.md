@@ -6,16 +6,8 @@
 
 Más sobre Outline 
 
-[doc/test-ofEILwlrDt](/doc/test-ofEILwlrDt)
 
-[./What%20is%20Outline.md](./What%20is%20Outline.md)
-
-aqui
-
-
-enlace a rates [aqui](/doc/rate-sheets-g9Tb0aSm69)
-
-
+\
 
 :::info
 Prueba Info
