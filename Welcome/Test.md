@@ -6,7 +6,6 @@
 
 Más sobre Outline [aqui](https://what-is-outline-SXj7qFrUem)
 
-\[\[Test\]\]
 
 
 :::info
