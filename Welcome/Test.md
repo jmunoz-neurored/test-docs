@@ -7,9 +7,6 @@
 Más sobre Outline 
 
 
-Prueba 01
-
-
 @[What is Outline](mention://86a84a82-c184-42ff-9ac0-2138441227bb/document/7d00e8ca-721f-4f44-a350-60983d9e2142) 
 
 @[Rates](mention://c0578822-acb4-4137-8a8c-611a2011c33f/document/87961cfb-a462-420c-81a2-3068db905853) 
