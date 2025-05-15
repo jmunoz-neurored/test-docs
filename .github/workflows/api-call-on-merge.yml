@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Send webhook to Docs-storage
         run: |
-          curl -X POST https://0a21-2a0c-5a85-6305-4d00-10d5-a478-4c1e-b5b2.ngrok-free.app/webhook/github \
+          curl -X POST https://0a21-2a0c-5a85-6305-4d00-10d5-a478-4c1e-b5b2.ngrok-free.app/webhooks/github \
                -H "Content-Type: application/json" \
                -d '{"message": "PR merged: ${{ github.event.pull_request.title }}"}'
