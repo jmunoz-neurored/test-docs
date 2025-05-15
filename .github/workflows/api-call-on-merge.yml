@@ -3,31 +3,35 @@ name: Call Docs-storage webhook on PR Merge
 on:
   pull_request:
     types:
-      - closed  # Detecta cuando se cierra una PR
+      - closed  # Trigger when a Pull Request is closed
 
 jobs:
   call-api:
-    if: github.event.pull_request.merged == true  # Asegura que fue merge y no simplemente cerrada
+    if: github.event.pull_request.merged == true  # Ensure the PR was merged (not just closed)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check if branch starts with docs/outline-
+      - name: Check if branch starts with docs/outline- and extract collection_id
         id: check_branch
         run: |
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
           echo "Branch: $BRANCH_NAME"
 
+          # If the branch starts with the expected prefix, extract the rest as collection_id
           if [[ "$BRANCH_NAME" == docs/outline-* ]]; then
+            COLLECTION_ID="${BRANCH_NAME#docs/outline-}"
             echo "MATCH=true" >> $GITHUB_OUTPUT
+            echo "COLLECTION_ID=$COLLECTION_ID" >> $GITHUB_OUTPUT
           else
             echo "MATCH=false" >> $GITHUB_OUTPUT
           fi
+
       - name: Send webhook to Docs-storage
-        if: steps.check_branch.outputs.MATCH == 'true'
+        if: steps.check_branch.outputs.MATCH == 'true'  # Only run if branch matched the pattern
         run: |
           curl -X POST https://0a21-2a0c-5a85-6305-4d00-10d5-a478-4c1e-b5b2.ngrok-free.app/webhooks/github \
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "collection_id": "${{ github.event.pull_request.head.ref }}"
+                 "collection_id": "${{ steps.check_branch.outputs.COLLECTION_ID }}"
                }'
