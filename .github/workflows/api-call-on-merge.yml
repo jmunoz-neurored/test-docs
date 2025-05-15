@@ -11,8 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check if branch starts with docs/outline-
+        id: check_branch
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          echo "Branch: $BRANCH_NAME"
+
+          if [[ "$BRANCH_NAME" == docs/outline-* ]]; then
+            echo "MATCH=true" >> $GITHUB_OUTPUT
+          else
+            echo "MATCH=false" >> $GITHUB_OUTPUT
+          fi
       - name: Send webhook to Docs-storage
+        if: steps.check_branch.outputs.MATCH == 'true'
         run: |
           curl -X POST https://0a21-2a0c-5a85-6305-4d00-10d5-a478-4c1e-b5b2.ngrok-free.app/webhooks/github \
                -H "Content-Type: application/json" \
-               -d '{"message": "PR merged: ${{ github.event.pull_request.title }}"}'
+               -d '{
+                 "message": "PR merged: ${{ github.event.pull_request.title }}",
+                 "collection_id": "${{ github.event.pull_request.head.ref }}"
+               }'
