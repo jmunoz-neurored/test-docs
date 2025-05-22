@@ -7,32 +7,38 @@ on:
 
 jobs:
   call-api:
-    if: github.event.pull_request.merged == true  # Ensure the PR was merged (not just closed)
+    if: github.event.pull_request.merged == true  # Only run if PR was merged
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check if branch starts with docs/outline- and extract collection_id
-        id: check_branch
+      - name: Extract collection_id from PR label
+        id: extract_collection_id
         run: |
-          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
-          echo "Branch: $BRANCH_NAME"
+          LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
+          echo "Labels: $LABELS"
 
-          # If the branch starts with the expected prefix, extract the rest as collection_id
-          if [[ "$BRANCH_NAME" == docs/outline-* ]]; then
-            COLLECTION_ID="${BRANCH_NAME#docs/outline-}"
-            echo "MATCH=true" >> $GITHUB_OUTPUT
-            echo "COLLECTION_ID=$COLLECTION_ID" >> $GITHUB_OUTPUT
-          else
+          MATCH=false
+          for label in $LABELS; do
+            if [[ "$label" == docs/outline#* ]]; then
+              COLLECTION_ID="${label#docs/outline#}"
+              echo "Found collection ID: $COLLECTION_ID"
+              echo "MATCH=true" >> $GITHUB_OUTPUT
+              echo "COLLECTION_ID=$COLLECTION_ID" >> $GITHUB_OUTPUT
+              break
+            fi
+          done
+
+          if [[ "$MATCH" != "true" ]]; then
             echo "MATCH=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Send webhook to Docs-storage
-        if: steps.check_branch.outputs.MATCH == 'true'  # Only run if branch matched the pattern
+        if: steps.extract_collection_id.outputs.MATCH == 'true'
         run: |
-          curl -X POST https://f1ff-2a0c-5a85-6305-4d00-102-8b69-d3f8-15e1.ngrok-free.app/webhooks/github \
+          curl -X POST https://439f-2a0c-5a85-6305-4d00-a16c-f37b-4e96-f9a5.ngrok-free.app/webhooks/github \
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "collection_id": "${{ steps.check_branch.outputs.COLLECTION_ID }}",
+                 "collection_id": "${{ steps.extract_collection_id.outputs.COLLECTION_ID }}",
                  "event": "pull_request"
                }'
