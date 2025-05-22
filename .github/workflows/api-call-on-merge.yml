@@ -17,33 +17,20 @@ jobs:
           LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
           echo "Labels: $LABELS"
 
-          MATCH=false
           for label in $LABELS; do
             if [[ "$label" == docs/outline#* ]]; then
               COLLECTION_ID="${label#docs/outline#}"
               echo "Found collection ID: $COLLECTION_ID"
-              echo "MATCH=true" >> $GITHUB_OUTPUT
-              echo "$MATCH"
               echo "COLLECTION_ID=$COLLECTION_ID" >> $GITHUB_OUTPUT
-              echo "$COLLECTION_ID"
-              echo "$GITHUB_OUTPUT"
               break
             fi
           done
 
-          if [[ "$MATCH" != "true" ]]; then
-            echo "MATCH=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Send webhook to Docs-storage
-        if: steps.extract_collection_id.outputs.MATCH == 'true'
+        if: steps.extract_collection_id.outputs.COLLECTION_ID != ''
         run: |
-          echo "MATCH: $steps.extract_collection_id.outputs.MATCH"
-          echo "COLLECTION_ID: $steps.extract_collection_id.outputs.COLLECTION_ID"
-          curl -X POST https://439f-2a0c-5a85-6305-4d00-a16c-f37b-4e96-f9a5.ngrok-free.app/webhooks/github \
+          curl -X POST https://f1ff-2a0c-5a85-6305-4d00-102-8b69-d3f8-15e1.ngrok-free.app/webhooks/github \
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "collection_id": "${{ steps.extract_collection_id.outputs.COLLECTION_ID }}",
-                 "event": "pull_request"
-               }'
+                 "coll
