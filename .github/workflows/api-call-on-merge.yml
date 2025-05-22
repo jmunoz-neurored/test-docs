@@ -29,7 +29,7 @@ jobs:
       - name: Send webhook to Docs-storage
         if: steps.extract_collection_id.outputs.COLLECTION_ID != ''
         run: |
-          curl -X POST "${{ secrets.DOCS_STORAGE_WEBHOOK_URL }}" \
+          curl -X POST "${{ vars.DOCS_STORAGE_WEBHOOK_URL }}" \
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
