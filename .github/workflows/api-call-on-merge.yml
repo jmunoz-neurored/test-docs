@@ -3,11 +3,11 @@ name: Call Docs-storage webhook on PR Merge
 on:
   pull_request:
     types:
-      - closed  # Trigger when a Pull Request is closed
+      - closed
 
 jobs:
   call-api:
-    if: github.event.pull_request.merged == true  # Only run if PR was merged
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -29,8 +29,10 @@ jobs:
       - name: Send webhook to Docs-storage
         if: steps.extract_collection_id.outputs.COLLECTION_ID != ''
         run: |
-          curl -X POST https://f1ff-2a0c-5a85-6305-4d00-102-8b69-d3f8-15e1.ngrok-free.app/webhooks/github \
+          curl -X POST "${{ secrets.DOCS_STORAGE_WEBHOOK_URL }}" \
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "coll
+                 "collection_id": "${{ steps.extract_collection_id.outputs.COLLECTION_ID }}",
+                 "event": "pull_request"
+               }'
