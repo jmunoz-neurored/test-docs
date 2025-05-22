@@ -23,7 +23,10 @@ jobs:
               COLLECTION_ID="${label#docs/outline#}"
               echo "Found collection ID: $COLLECTION_ID"
               echo "MATCH=true" >> $GITHUB_OUTPUT
+              echo "$MATCH"
               echo "COLLECTION_ID=$COLLECTION_ID" >> $GITHUB_OUTPUT
+              echo "$COLLECTION_ID"
+              echo "$GITHUB_OUTPUT"
               break
             fi
           done
