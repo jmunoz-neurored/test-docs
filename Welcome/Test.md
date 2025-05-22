@@ -4,10 +4,7 @@
 
 [getouline](https://www.getoutline.com/)
 
-Más sobre Outline 
-
-
-Prueba 01
+Más sobre Outline 9 xd9
 
 
 @[What is Outline](mention://86a84a82-c184-42ff-9ac0-2138441227bb/document/7d00e8ca-721f-4f44-a350-60983d9e2142) 
@@ -57,7 +54,7 @@ Prueba 1
 __==subrayado A==__
 
 
-- [ ] Prueba tarea sin completar
+- [x] Prueba tarea sin completar
 - [x] Prueba tarea completa
 
 
@@ -89,3 +86,9 @@ file_path = 'example.txt'
 total_lines = count_lines(file_path)
 print(f"The file has {total_lines} lines.")
 ```
+
+Test
+
+lorem
+
+ipsum1
