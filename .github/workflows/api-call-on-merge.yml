@@ -33,6 +33,6 @@ jobs:
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "operation_id": "${{ steps.extract_collection_id.outputs.OPERATION_ID }}",
+                 "operation_id": "${{ steps.extract_operation_id.outputs.OPERATION_ID }}",
                  "event": "pull_request"
                }'
