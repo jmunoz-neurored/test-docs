@@ -11,28 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract collection_id from PR label
-        id: extract_collection_id
+      - name: Extract operation id from PR label
+        id: extract_operation_id
         run: |
           LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
           echo "Labels: $LABELS"
 
           for label in $LABELS; do
             if [[ "$label" == docs/outline#* ]]; then
-              COLLECTION_ID="${label#docs/outline#}"
-              echo "Found collection ID: $COLLECTION_ID"
-              echo "COLLECTION_ID=$COLLECTION_ID" >> $GITHUB_OUTPUT
+              OPERATION_ID="${label#docs/outline#}"
+              echo "Found OPERATION ID: $OPERATION_ID"
+              echo "OPERATION_ID=$OPERATION_ID" >> $GITHUB_OUTPUT
               break
             fi
           done
 
       - name: Send webhook to Docs-storage
-        if: steps.extract_collection_id.outputs.COLLECTION_ID != ''
+        if: steps.extract_operation_id.outputs.OPERATION_ID != ''
         run: |
           curl -X POST "${{ vars.DOCS_STORAGE_WEBHOOK_URL }}" \
                -H "Content-Type: application/json" \
                -d '{
                  "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "collection_id": "${{ steps.extract_collection_id.outputs.COLLECTION_ID }}",
+                 "operation_id": "${{ steps.extract_collection_id.outputs.OPERATION_ID }}",
                  "event": "pull_request"
                }'
