@@ -35,6 +35,8 @@ jobs:
       - name: Send webhook to Docs-storage
         if: steps.extract_collection_id.outputs.MATCH == 'true'
         run: |
+          echo "MATCH: $steps.extract_collection_id.outputs.MATCH"
+          echo "COLLECTION_ID: $steps.extract_collection_id.outputs.COLLECTION_ID"
           curl -X POST https://439f-2a0c-5a85-6305-4d00-a16c-f37b-4e96-f9a5.ngrok-free.app/webhooks/github \
                -H "Content-Type: application/json" \
                -d '{
