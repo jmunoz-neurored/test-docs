@@ -29,10 +29,15 @@ jobs:
       - name: Send webhook to Docs-storage
         if: steps.extract_operation_id.outputs.OPERATION_ID != ''
         run: |
+          payload='{
+            "message": "PR merged: ${{ github.event.pull_request.title }}",
+            "operation_id": "${{ steps.extract_operation_id.outputs.OPERATION_ID }}",
+            "event": "pull_request"
+          }'
+      
+          signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.DOCS_STORAGE_WEBHOOK_SECRET }}" | sed 's/^.* //')
           curl -X POST "${{ vars.DOCS_STORAGE_WEBHOOK_URL }}" \
                -H "Content-Type: application/json" \
-               -d '{
-                 "message": "PR merged: ${{ github.event.pull_request.title }}",
-                 "operation_id": "${{ steps.extract_operation_id.outputs.OPERATION_ID }}",
-                 "event": "pull_request"
-               }'
+               -H "X-Hub-Signature-256: sha256=$signature" \
+               -d "$payload"
+
