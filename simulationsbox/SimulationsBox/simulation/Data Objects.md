@@ -1,3 +1,0 @@
-# Data Objects
-
-Lorem Ipsum
