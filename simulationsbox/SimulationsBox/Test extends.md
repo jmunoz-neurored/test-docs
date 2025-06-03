@@ -1,0 +1,3 @@
+# Test extends
+
+> #extends @
