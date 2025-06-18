@@ -14,6 +14,6 @@ Some ideas to get you and your team started with learning the basics of Outline,
 ## More to try
 
 - [x] Setup the [Slack integration](/settings/integrations/slack)
-- [ ] **Create a template** to share a writing structure with your team
-- [ ] Create a check list to track tasks
-- [ ] Try embedding a supported [integration](https://www.getoutline.com/integrations)
+- [x] **Create a template** to share a writing structure with your team
+- [x] Create a check list to track tasks
+- [x] Try embedding a supported [integration](https://www.getoutline.com/integrations)
