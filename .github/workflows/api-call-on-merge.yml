@@ -18,8 +18,8 @@ jobs:
           echo "Labels: $LABELS"
 
           for label in $LABELS; do
-            if [[ "$label" == docs/outline#* ]]; then
-              OPERATION_ID="${label#docs/outline#}"
+            if [[ "$label" == docs-outline-* ]]; then
+              OPERATION_ID="${label#docs-outline-}"
               echo "Found OPERATION ID: $OPERATION_ID"
               echo "OPERATION_ID=$OPERATION_ID" >> $GITHUB_OUTPUT
               break
@@ -40,4 +40,3 @@ jobs:
                -H "Content-Type: application/json" \
                -H "X-Hub-Signature-256: sha256=$signature" \
                -d "$payload"
-
