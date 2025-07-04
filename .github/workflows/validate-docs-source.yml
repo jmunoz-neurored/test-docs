@@ -1,4 +1,4 @@
-name: Validate Documentation Changes Source is Outline
+name: Validate Changes on Documentation comes from outline
 
 on:
   pull_request:
@@ -36,22 +36,8 @@ jobs:
           CHANGED_FILES=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '.[].filename')
           echo "$CHANGED_FILES"
           
-          # Check for documentation changes (excluding README.md)
-          if echo "$CHANGED_FILES" | grep -qE '\.(md)$|^docs/' | grep -v '^README\.md
-            echo "Documentation files were modified"
-            
-            if [ "$IS_FROM_OUTLINE" = "false" ]; then
-              echo "::error::Documentation changes must come from Outline"
-              echo "Please ensure documentation changes are made through Outline and not directly in the repository."
-              exit 1
-            else
-              echo "✓ Documentation changes are from Outline - validation passed"
-            fi
-          else
-            echo "No documentation files were modified"
-          fi
-        env:
-          GH_TOKEN: ${{ github.token }}; then
+          # Check for documentation changes
+          if echo "$CHANGED_FILES" | grep -qE '\.(md)$|^docs/'; then
             echo "Documentation files were modified"
             
             if [ "$IS_FROM_OUTLINE" = "false" ]; then
