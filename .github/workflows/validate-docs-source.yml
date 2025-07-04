@@ -1,4 +1,4 @@
-name: Validate Documentation Source (Extensible)
+name: Validate Documentation Source
 
 on:
   pull_request:
@@ -12,68 +12,57 @@ jobs:
     name: Validate Documentation Source
     runs-on: ubuntu-latest
     
-    # Configuration Panel
-    env:
-      # Define documentation file patterns here
-      DOC_PATTERNS: |
-        \.md$
-        ^docs/
-        ^guides/
-      # Define files/paths to exclude
-      EXCLUDED_PATTERNS: |
-        ^README\.md$
-      # Define patterns that identify allowed PR sources
-      ALLOWED_SOURCE_PATTERNS: |
-        from Outline
-        collection.*#
-        operation_id
-        for collection
-        Update documentation for collection
-    
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get changed files and validate source
+      - name: Validate documentation source
         run: |
-          # Get changed files from PR
-          echo "Getting changed files from PR..."
+          # Check if PR is from Outline
+          FULL_TEXT="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+          
+          if echo "$FULL_TEXT" | grep -qiE "(collection.*#|for collection|Update documentation for collection|operation_id|from Outline)"; then
+            echo "✓ PR appears to be from Outline"
+            IS_FROM_OUTLINE=true
+          else
+            echo "✗ PR does not appear to be from Outline"
+            IS_FROM_OUTLINE=false
+          fi
+          
+          # Get changed files using GitHub API data (more reliable for PRs)
+          echo "Files changed in this PR:"
           CHANGED_FILES=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '.[].filename')
-          echo "Changed files:"
           echo "$CHANGED_FILES"
           
-          # Build include pattern from DOC_PATTERNS
-          INCLUDE_PATTERN=$(echo "${{ env.DOC_PATTERNS }}" | tr '\n' '|' | sed 's/|$//')
-          echo "Include pattern: $INCLUDE_PATTERN"
-          
-          # Build exclude pattern from EXCLUDED_PATTERNS  
-          EXCLUDE_PATTERN=$(echo "${{ env.EXCLUDED_PATTERNS }}" | tr '\n' '|' | sed 's/|$//')
-          echo "Exclude pattern: $EXCLUDE_PATTERN"
-          
-          # Check for documentation changes
-          echo "Checking for documentation changes..."
-          DOC_CHANGES=$(echo "$CHANGED_FILES" | grep -E "($INCLUDE_PATTERN)" | grep -vE "($EXCLUDE_PATTERN)" || true)
-          
-          if [ -n "$DOC_CHANGES" ]; then
-            echo "Documentation files were modified:"
-            echo "$DOC_CHANGES"
+          # Check for documentation changes (excluding README.md)
+          if echo "$CHANGED_FILES" | grep -qE '\.(md)$|^docs/' | grep -v '^README\.md
+            echo "Documentation files were modified"
             
-            # Check if PR is from allowed source
-            FULL_TEXT="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
-            ALLOWED_REGEX=$(echo "${{ env.ALLOWED_SOURCE_PATTERNS }}" | tr '\n' '|' | sed 's/|$//')
-            
-            echo "Validating PR source..."
-            if echo "$FULL_TEXT" | grep -qiE "($ALLOWED_REGEX)"; then
-              echo "PR source is valid. Documentation changes are allowed."
-            else
-              echo "::error::Documentation changes must come from an approved source (e.g., Outline)."
-              echo "Please ensure documentation changes are made through the correct tool and not directly in the repository."
+            if [ "$IS_FROM_OUTLINE" = "false" ]; then
+              echo "::error::Documentation changes must come from Outline"
+              echo "Please ensure documentation changes are made through Outline and not directly in the repository."
               exit 1
+            else
+              echo "✓ Documentation changes are from Outline - validation passed"
             fi
           else
-            echo "No relevant documentation files were modified. Validation skipped."
+            echo "No documentation files were modified"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}; then
+            echo "Documentation files were modified"
+            
+            if [ "$IS_FROM_OUTLINE" = "false" ]; then
+              echo "::error::Documentation changes must come from Outline"
+              echo "Please ensure documentation changes are made through Outline and not directly in the repository."
+              exit 1
+            else
+              echo "✓ Documentation changes are from Outline - validation passed"
+            fi
+          else
+            echo "No documentation files were modified"
           fi
         env:
           GH_TOKEN: ${{ github.token }}
