@@ -1,0 +1,42 @@
+stages:
+  - validate
+
+validate-docs-source:
+  stage: validate
+  image: alpine/git:latest
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - "**/*.md"
+        - "docs/**"
+  script:
+    - |
+      # Check if MR is from Outline
+      FULL_TEXT="$CI_MERGE_REQUEST_TITLE $CI_MERGE_REQUEST_DESCRIPTION"
+      
+      # Simplified pattern matching for Outline PRs
+      if echo "$FULL_TEXT" | grep -qiE "(collection.*#|for collection|Update documentation for collection|operation_id|from Outline)"; then
+        echo "✓ MR appears to be from Outline"
+        IS_FROM_OUTLINE=true
+      else
+        echo "✗ MR does not appear to be from Outline"
+        IS_FROM_OUTLINE=false
+      fi
+      
+      # Check for documentation changes
+      git fetch origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME --depth=1
+      CHANGED_FILES=$(git diff --name-only origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME HEAD)
+      
+      if echo "$CHANGED_FILES" | grep -qE '\.(md)$|^docs/'; then
+        echo "Documentation files were modified"
+        
+        if [ "$IS_FROM_OUTLINE" = "false" ]; then
+          echo "ERROR: Documentation changes must come from Outline"
+          echo "Please ensure documentation changes are made through Outline and not directly in the repository."
+          exit 1
+        else
+          echo "✓ Documentation changes are from Outline - validation passed"
+        fi
+      else
+        echo "No documentation files were modified - skipping validation"
+      fi
