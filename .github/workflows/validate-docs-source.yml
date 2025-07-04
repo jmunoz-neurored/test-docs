@@ -1,72 +1,79 @@
-name: Validate Documentation Source is Outline
+name: Validate Documentation Source (Extensible)
 
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
+    paths:
+      - '**/*.md'
+      - 'docs/**'
 
 jobs:
   validate-docs-source:
     name: Validate Documentation Source
     runs-on: ubuntu-latest
-
+    
+    # Configuration Panel
     env:
-      # Define aquí las rutas de los archivos de documentación.
-      DOC_PATHS: |
-        **/*.md
-        docs/**
-      # Define las rutas o archivos a excluir.
-      EXCLUDED_PATHS: |
-        README.md
-      # Define los patrones (regex) que identifican un PR permitido.
+      # Define documentation file patterns here
+      DOC_PATTERNS: |
+        \.md$
+        ^docs/
+        ^guides/
+      # Define files/paths to exclude
+      EXCLUDED_PATTERNS: |
+        ^README\.md$
+      # Define patterns that identify allowed PR sources
       ALLOWED_SOURCE_PATTERNS: |
         from Outline
         collection.*#
         operation_id
-
+        for collection
+        Update documentation for collection
+    
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 1. Get changed files list
-        id: get_changed_files
+      - name: Get changed files and validate source
         run: |
-          FILES=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '.[].filename')
-          echo "files<<EOF" >> $GITHUB_OUTPUT
-          echo "$FILES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          # Get changed files from PR
+          echo "Getting changed files from PR..."
+          CHANGED_FILES=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '.[].filename')
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          
+          # Build include pattern from DOC_PATTERNS
+          INCLUDE_PATTERN=$(echo "${{ env.DOC_PATTERNS }}" | tr '\n' '|' | sed 's/|$//')
+          echo "Include pattern: $INCLUDE_PATTERN"
+          
+          # Build exclude pattern from EXCLUDED_PATTERNS  
+          EXCLUDE_PATTERN=$(echo "${{ env.EXCLUDED_PATTERNS }}" | tr '\n' '|' | sed 's/|$//')
+          echo "Exclude pattern: $EXCLUDE_PATTERN"
+          
+          # Check for documentation changes
+          echo "Checking for documentation changes..."
+          DOC_CHANGES=$(echo "$CHANGED_FILES" | grep -E "($INCLUDE_PATTERN)" | grep -vE "($EXCLUDE_PATTERN)" || true)
+          
+          if [ -n "$DOC_CHANGES" ]; then
+            echo "Documentation files were modified:"
+            echo "$DOC_CHANGES"
+            
+            # Check if PR is from allowed source
+            FULL_TEXT="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
+            ALLOWED_REGEX=$(echo "${{ env.ALLOWED_SOURCE_PATTERNS }}" | tr '\n' '|' | sed 's/|$//')
+            
+            echo "Validating PR source..."
+            if echo "$FULL_TEXT" | grep -qiE "($ALLOWED_REGEX)"; then
+              echo "PR source is valid. Documentation changes are allowed."
+            else
+              echo "::error::Documentation changes must come from an approved source (e.g., Outline)."
+              echo "Please ensure documentation changes are made through the correct tool and not directly in the repository."
+              exit 1
+            fi
+          else
+            echo "No relevant documentation files were modified. Validation skipped."
+          fi
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: 2. Check if documentation files were modified
-        id: check_docs
-        run: |
-          # Construimos los patrones de `grep` a partir de la configuración
-          INCLUDE_PATTERN=$(echo "${{ env.DOC_PATHS }}" | sed 's#\*\*#.*#g' | sed 's#\*#.*#g' | awk '{printf "%s%s", sep, $0; sep "|"} END{print ""}')
-          EXCLUDE_PATTERN=$(echo "${{ env.EXCLUDED_PATHS }}" | awk '{printf "%s%s", sep, $0; sep "|"} END{print ""}')
-
-          echo "Checking for changes in documentation files..."
-          # Comprobamos si hay archivos que coinciden con DOC_PATHS y no con EXCLUDED_PATHS
-          if echo "${{ steps.get_changed_files.outputs.files }}" | grep -E "($INCLUDE_PATTERN)" | grep -vE "($EXCLUDE_PATTERN)"; then
-            echo "Documentation files were modified."
-            echo "docs_changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "No relevant documentation files were modified."
-            echo "docs_changed=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: 3. Validate PR source if docs were changed
-        if: steps.check_docs.outputs.docs_changed == 'true'
-        run: |
-          FULL_TEXT="${{ github.event.pull_request.title }} ${{ github.event.pull_request.body }}"
-          ALLOWED_REGEX=$(echo "${{ env.ALLOWED_SOURCE_PATTERNS }}" | awk '{printf "%s%s", sep, $0; sep "|"} END{print ""}')
-          
-          echo "Validating PR source..."
-          if echo "$FULL_TEXT" | grep -qiE "($ALLOWED_REGEX)"; then
-            echo "PR source is valid. Validation passed."
-          else
-            echo "::error::Documentation changes must come from Outline."
-            echo "Please ensure documentation changes are made through the correct tool and not directly in the repository."
-            exit 1
-          fi
