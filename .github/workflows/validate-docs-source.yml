@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout code
+      - name: Checkout PR code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -31,9 +31,12 @@ jobs:
             IS_FROM_OUTLINE=false
           fi
           
-          # Check for documentation changes
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }} HEAD)
+          # Get changed files using GitHub API data (more reliable for PRs)
+          echo "Files changed in this PR:"
+          CHANGED_FILES=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '.[].filename')
+          echo "$CHANGED_FILES"
           
+          # Check for documentation changes
           if echo "$CHANGED_FILES" | grep -qE '\.(md)$|^docs/'; then
             echo "Documentation files were modified"
             
@@ -47,3 +50,5 @@ jobs:
           else
             echo "No documentation files were modified"
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
