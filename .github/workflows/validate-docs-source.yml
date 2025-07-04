@@ -1,4 +1,4 @@
-name: Validate Documentation Source
+name: Validate Documentation Changes Source is Outline
 
 on:
   pull_request:
