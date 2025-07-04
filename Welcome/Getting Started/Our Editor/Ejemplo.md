@@ -1,4 +1,4 @@
-# Ejemplo
+# Ejemplo 1
 
 ```mermaidjs
 ---
